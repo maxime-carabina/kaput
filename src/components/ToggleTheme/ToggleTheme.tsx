@@ -1,5 +1,7 @@
 import { useState } from 'react';
+
 import { Moon, Sun } from 'lucide-react';
+
 import { useLocalStorage } from '@/custom/useLocalStorage';
 
 interface ThemeToggleProps {
