@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.prettierrc.js
+.eslintrc.js
+env.d.ts
+presets/
+tailwind.config.js
+.eslintcache

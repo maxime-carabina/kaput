@@ -1,4 +1,4 @@
-import Kaput from "@/assets/kaput.png"
+import Kaput from '@/assets/kaput.png';
 
 export function Index() {
   return (
