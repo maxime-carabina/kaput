@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
-import { Header } from "@/components";
+import { ReactNode } from 'react';
+
+import { Header } from '@/components';
 
 interface KaputLayoutProps {
   onSetTheme?: (theme: 'dark' | 'light') => void;

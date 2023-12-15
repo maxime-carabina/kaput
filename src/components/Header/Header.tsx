@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { ThemeToggle } from '@/components';
 
 import KaputLogo from '@/assets/kaput.png';
+import { ThemeToggle } from '@/components';
 
 interface HeaderProps {
   onSetTheme?: (theme: 'dark' | 'light') => void;
@@ -18,7 +18,7 @@ export function Header(props: HeaderProps) {
         <img src={KaputLogo} alt="Kaput Logo" className="w-16 h-16" />
       </Link>
       {/* <div className="mr-4"> */}
-        <ThemeToggle onSetTheme={onSetTheme} />
+      <ThemeToggle onSetTheme={onSetTheme} />
       {/* </div> */}
     </header>
   );
