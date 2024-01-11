@@ -16,8 +16,6 @@ fetch('public/questions.json')
     }
     );
 
-
-
 // --------  INITIALISATION DE LA SCÈNE, DE LA CAMÉRA ET DU RENDU  --------
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf8eee1);
@@ -270,9 +268,9 @@ function onMouseClick(event) {
     event.preventDefault();
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    
+
     raycaster.setFromCamera(mouse, camera);
-    
+
     const intersects = raycaster.intersectObjects([playButton]);
     if (scene.getObjectById(playButton.id) && intersects.length > 0 && !isRaining) {
         initLogoRain();
@@ -331,6 +329,131 @@ function createSceneScore() {
         textMesh.lookAt(camera.position);
 
         scene.add(textMesh);
+
+        // add a name input field
+        const textInput = document.createElement('input');
+        textInput.type = 'text';
+        textInput.id = 'name';
+        textInput.placeholder = 'Enter your name';
+        textInput.style.position = 'absolute';
+        textInput.style.top = '43%';
+        textInput.style.left = '50%';
+        textInput.style.transform = 'translate(-50%, -50%)';
+        textInput.style.fontSize = '20px';
+        textInput.style.fontFamily = 'Luckiest Guy';
+        textInput.style.color = '#0786c1';
+        textInput.style.backgroundColor = '#f8eee1';
+        textInput.style.border = 'none';
+        textInput.style.outline = 'none';
+        textInput.style.textAlign = 'center';
+        textInput.style.padding = '10px';
+        textInput.style.borderRadius = '10px';
+        textInput.style.boxShadow = '0 0 10px #0786c1';
+        document.body.appendChild(textInput);
+
+        // ---------------------  BOUTON SUBMIT SCORE  ---------------------
+        const submitbuttonGeometry = new THREE.BoxGeometry(1.3, 0.5, 0.3);
+        const submitbuttonMaterial = new THREE.MeshBasicMaterial({ color: 0xf16a53 });
+        const submitButton = new THREE.Mesh(submitbuttonGeometry, submitbuttonMaterial);
+
+        submitButton.position.x = camera.position.x - 0.7;
+        submitButton.position.y = -0.65;
+        submitButton.position.z = 1;
+
+        scene.add(submitButton);
+
+        // ---------------------  TEXTE DU BOUTON  ---------------------
+        const loader1 = new FontLoader();
+
+        loader1.load('public/fonts/Luckiest Guy_Regular.json', function (font) {
+            const textGeometry = new TextGeometry('Submit', {
+                font: font,
+                size: 0.2,
+                height: 0.05,
+            });
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.y = submitButton.position.y - 0.1;
+            textMesh.position.x = submitButton.position.x - 0.45;
+            textMesh.position.z = submitButton.position.z + 0.1;
+            scene.add(textMesh);
+        }
+        );
+
+
+        // ---------------------  BOUTON REJOUER  ---------------------
+        const buttonGeometry = new THREE.BoxGeometry(1.3, 0.5, 0.3);
+        const buttonMaterial = new THREE.MeshBasicMaterial({ color: 0xf16a53 });
+        const replayButton = new THREE.Mesh(buttonGeometry, buttonMaterial);
+
+        replayButton.position.x = camera.position.x + 0.7;
+        replayButton.position.y = -0.65;
+        replayButton.position.z = 1;
+
+        scene.add(replayButton);
+
+        // ---------------------  TEXTE DU BOUTON  ---------------------
+        const loader = new FontLoader();
+
+        loader.load('public/fonts/Luckiest Guy_Regular.json', function (font) {
+            const textGeometry = new TextGeometry('Replay', {
+                font: font,
+                size: 0.2,
+                height: 0.05,
+            });
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.x = replayButton.position.x - 0.45;
+            textMesh.position.y = replayButton.position.y - 0.1;
+            textMesh.position.z = replayButton.position.z + 0.1;
+            scene.add(textMesh);
+        }
+        );
+
+        // -----------------  GESTIONNAIRE D'ÉVÉNEMENTS DU BOUTON  ----------------
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onMouseClick(event) {
+            event.preventDefault();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            const intersects = raycaster.intersectObjects([replayButton]);
+            if (scene.getObjectById(replayButton.id) && intersects.length > 0) {
+                window.location.reload();
+            }
+
+            const intersectsSubmit = raycaster.intersectObjects([submitButton]);
+            if (scene.getObjectById(submitButton.id) && intersectsSubmit.length > 0) {
+                const name = document.getElementById('name').value;
+                if (name) {
+                    const scoreToSubmit = {
+                        name: name,
+                        score: score
+                    }
+                    fetch('http://localhost:8080/scores', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(scoreToSubmit)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success:', data);
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }
+            }
+        }
+
+        window.addEventListener('click', onMouseClick, false);
+
     }
     );
 }
@@ -358,7 +481,7 @@ function checkAnswer(event) {
     const intersectsBlueButton = raycaster.intersectObjects([buttonBlue]);
     const intersectsGreenButton = raycaster.intersectObjects([buttonGreen]);
     const intersectsYellowButton = raycaster.intersectObjects([buttonYellow]);
-    
+
     if (scene.getObjectById(buttonRed.id) && intersectsRedButton.length > 0) {
         if (dataset[currentQuestion].answers[0] === dataset[currentQuestion].correctAnswer) {
             goodAnswerSoundEffect.play();
@@ -422,7 +545,13 @@ function checkAnswer(event) {
 }
 
 function createButtons() {
-    const buttonGeometry = new THREE.BoxGeometry(1, 0.5, 0.3);
+    let longestAnswer = dataset[currentQuestion].answers[0];
+    for (let i = 1; i < dataset[currentQuestion].answers.length; i++) {
+        if (dataset[currentQuestion].answers[i].length > longestAnswer.length) {
+            longestAnswer = dataset[currentQuestion].answers[i];
+        }
+    }
+    const buttonGeometry = new THREE.BoxGeometry(longestAnswer.length * 0.2 + 0.1, 0.5, 0.3)
     const buttonMaterialRed = new THREE.MeshBasicMaterial({ color: 0xf16a53 });
     const buttonMaterialBlue = new THREE.MeshBasicMaterial({ color: 0x0786c1 });
     const buttonMaterialGreen = new THREE.MeshBasicMaterial({ color: 0x5cb85c });
@@ -434,19 +563,19 @@ function createButtons() {
     buttonYellow = new THREE.Mesh(buttonGeometry, buttonMaterialYellow);
 
     buttonRed.position.x = camera.position.x - 2;
-    buttonRed.position.y = camera.position.y - 1;
+    buttonRed.position.y = camera.position.y - 0;
     buttonRed.position.z = camera.position.z - 5;
 
     buttonBlue.position.x = camera.position.x + 2;
-    buttonBlue.position.y = camera.position.y - 1;
+    buttonBlue.position.y = camera.position.y - 0;
     buttonBlue.position.z = camera.position.z - 5;
 
     buttonGreen.position.x = camera.position.x - 2;
-    buttonGreen.position.y = camera.position.y - 3;
+    buttonGreen.position.y = camera.position.y - 2;
     buttonGreen.position.z = camera.position.z - 5;
 
     buttonYellow.position.x = camera.position.x + 2;
-    buttonYellow.position.y = camera.position.y - 3;
+    buttonYellow.position.y = camera.position.y - 2;
     buttonYellow.position.z = camera.position.z - 5;
 
     scene.add(buttonRed);
@@ -487,19 +616,19 @@ function createButtons() {
         const textMeshGreen = new THREE.Mesh(textGeometryGreen, textMaterial);
         const textMeshYellow = new THREE.Mesh(textGeometryYellow, textMaterial);
 
-        textMeshRed.position.x = buttonRed.position.x - 0.2;
+        textMeshRed.position.x = buttonRed.position.x - dataset[currentQuestion].answers[0].length * 0.1 + 0.15;
         textMeshRed.position.y = buttonRed.position.y - 0.1;
         textMeshRed.position.z = buttonRed.position.z + 0.1;
 
-        textMeshBlue.position.x = buttonBlue.position.x - 0.3;
+        textMeshBlue.position.x = buttonBlue.position.x - dataset[currentQuestion].answers[1].length * 0.1 + 0.15;
         textMeshBlue.position.y = buttonBlue.position.y - 0.1;
         textMeshBlue.position.z = buttonBlue.position.z + 0.1;
 
-        textMeshGreen.position.x = buttonGreen.position.x - 0.4;
+        textMeshGreen.position.x = buttonGreen.position.x - dataset[currentQuestion].answers[2].length * 0.1 + 0.15;
         textMeshGreen.position.y = buttonGreen.position.y - 0.1;
         textMeshGreen.position.z = buttonGreen.position.z + 0.1;
 
-        textMeshYellow.position.x = buttonYellow.position.x - 0.5;
+        textMeshYellow.position.x = buttonYellow.position.x - dataset[currentQuestion].answers[3].length * 0.1 + 0.15;
         textMeshYellow.position.y = buttonYellow.position.y - 0.1;
         textMeshYellow.position.z = buttonYellow.position.z + 0.1;
 
@@ -527,7 +656,7 @@ function deleteButtons() {
     scene.remove(answerBlue);
     scene.remove(answerGreen);
     scene.remove(answerYellow);
-    if (currentQuestion < Object.keys( dataset ).length) {
+    if (currentQuestion < Object.keys(dataset).length) {
         createSceneQuestions();
     } else {
         createSceneScore();
@@ -594,18 +723,18 @@ function rainLogo() {
             }
         }
     }
-    if (upLeftLogo.loadedLogo && upRightLogo.loadedLogo && upLeftLogo.loadedLogo.position.y > minPositionY+2.5) {
+    if (upLeftLogo.loadedLogo && upRightLogo.loadedLogo && upLeftLogo.loadedLogo.position.y > minPositionY + 2.5) {
         upLeftLogo.moveLogo(0, -0.16, 0);
         upRightLogo.moveLogo(0, -0.16, 0);
     }
-    if (downLeftLogo.loadedLogo && downRightLogo.loadedLogo && downLeftLogo.loadedLogo.position.y > minPositionY+3) {
+    if (downLeftLogo.loadedLogo && downRightLogo.loadedLogo && downLeftLogo.loadedLogo.position.y > minPositionY + 3) {
         downLeftLogo.moveLogo(0, -0.16, 0);
         downRightLogo.moveLogo(0, -0.16, 0);
     }
-    if (kaputText && kaputText.position.y > minPositionY+2.4) {
+    if (kaputText && kaputText.position.y > minPositionY + 2.4) {
         kaputText.position.y -= 0.16;
     }
-    if (playButton && playButton.position.y > minPositionY+0.4) {
+    if (playButton && playButton.position.y > minPositionY + 0.4) {
         playButton.position.y -= 0.16;
         playText.position.y -= 0.16;
     }
@@ -680,7 +809,7 @@ function animate() {
     rotateLogo();
     animateConfettis();
     animateParticles();
-    
+
 
     renderer.render(scene, camera);
 }
