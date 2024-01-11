@@ -15,7 +15,7 @@ export function usePost<TBody, TResponse = null>(
   { params?: Record<string, string>; payload?: TBody },
   unknown
 > {
-  const baseURL = import.meta.env.VITE_BASE_API;
+  const baseURL = 'http://127.0.0.1:8080';
   let url = `${baseURL}/${resource}`;
 
   return useMutation<

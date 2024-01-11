@@ -1,6 +1,8 @@
-import { faker } from '@faker-js/faker';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -22,6 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
+import { usePost } from '@/custom/api';
 
 const FormSchema = z.object({
   artist: z
@@ -46,21 +49,52 @@ const ARTISTS = [
 ];
 
 export function CreateQuizz() {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
+  const [artist, setArtist] = useState('');
+
+  const {
+    mutate,
+    data,
+    isSuccess: postSuccess,
+    isError: postError,
+    error,
+  } = usePost(
+    `start/${artist}`,
+  );
+
+  useEffect(() => {
+    if (postSuccess) {
+      toast({
+        title: 'You get the following values:',
+        description: (
+          <pre className="mt-2 w-fit rounded-md bg-slate-950 p-4">
+            <code className="text-white w-full">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+      });
+      console.log(data);
+      // navigate(`/dashboard`);
+    } else if (postError) {
+      console.error(error);
+    }
+  }, [postSuccess, postError]);
+
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(faker.music.songName());
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    setArtist(data.artist);
+    mutate({});
+    // toast({
+    //   title: 'You submitted the following values:',
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
   }
 
   return (

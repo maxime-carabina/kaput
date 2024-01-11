@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ReactDOM from 'react-dom/client';
 import {
   RouterProvider,
@@ -19,6 +20,8 @@ import {
   Dashboard,
   SelectQuizz,
 } from '@/pages';
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +43,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} fallbackElement={<Error />} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} fallbackElement={<Error />} />
+    </QueryClientProvider>
   </React.StrictMode>,
 );
