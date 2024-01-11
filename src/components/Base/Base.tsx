@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { KaputLayout } from '@/components';
+import { Toaster } from '@/components/ui/toaster';
 import { useLocalStorage } from '@/custom/useLocalStorage';
 import { useConfigStore } from '@/store/store';
 
@@ -34,6 +35,7 @@ export function Base() {
     <div className={theme}>
       <KaputLayout onSetTheme={handleSetTheme} storedTheme={theme}>
         <Outlet />
+        <Toaster />
       </KaputLayout>
     </div>
   );
