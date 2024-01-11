@@ -38,6 +38,7 @@
           "correct_answer": correct_answer 
       }
   }
+<<<<<<< HEAD
 
   
 ## Endpoint Description
@@ -69,3 +70,5 @@ This route is part of a Flask application, specifically a Blueprint named "quiz_
   {
       "message": "Quiz results saved successfully."
   }
+=======
+>>>>>>> 2fa460a (Create README.md)
