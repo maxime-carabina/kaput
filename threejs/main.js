@@ -4,6 +4,20 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
+// -----------------  READ THE JSON FILE FOR THE QUESTION  ----------------
+let currentQuestion = 0;
+let score = 0;
+let dataset = null;
+
+fetch('public/questions.json')
+    .then(response => response.json())
+    .then(data => {
+        dataset = data;
+    }
+    );
+
+
+
 // --------  INITIALISATION DE LA SCÈNE, DE LA CAMÉRA ET DU RENDU  --------
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf8eee1);
@@ -14,6 +28,30 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// -------------------------  GESTION DE L'AUDIO  -------------------------
+const listener = new THREE.AudioListener();
+camera.add(listener);
+
+const goodAnswerSoundEffect = new THREE.Audio(listener);
+
+const goodAnswerSoundEffectAudioLoader = new THREE.AudioLoader();
+goodAnswerSoundEffectAudioLoader.load('public/soundeffect/correctAnswer.mp3', function (buffer) {
+    goodAnswerSoundEffect.setBuffer(buffer);
+    goodAnswerSoundEffect.setLoop(false);
+    goodAnswerSoundEffect.setVolume(0.5);
+});
+
+const wrongAnswerSoundEffect = new THREE.Audio(listener);
+
+const wrongAnswerSoundEffectAudioLoader = new THREE.AudioLoader();
+wrongAnswerSoundEffectAudioLoader.load('public/soundeffect/wrongAnswer.mp3', function (buffer) {
+    wrongAnswerSoundEffect.setBuffer(buffer);
+    wrongAnswerSoundEffect.setLoop(false);
+    wrongAnswerSoundEffect.setVolume(0.5);
+});
+
+
+
 // --------------------------------  LIGHT  -------------------------------
 const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
 ambientLight.intensity = 20;
@@ -21,8 +59,8 @@ scene.add(ambientLight);
 
 // -----------------------  CHANGE BACKGROUNDCOLOR  -----------------------
 function changeBackgroundColor(newColor) {
-    // const color = new THREE.Color(newColor);
-    // scene.background = color;
+    const color = new THREE.Color(newColor);
+    scene.background = color;
 }
 
 // ---------------------  PARTICULE SYSTEM BAD ANSWER  --------------------
@@ -58,12 +96,12 @@ function initParticlesBadAnswer() {
 // ------------------------  GESTION DES CONFETTIS  -----------------------
 let confettis = [];
 
-function createConfetti() {
+function createConfetti(spawnPosition) {
     const confettiGeometry = new THREE.PlaneGeometry(0.1, 0.1);
     const confettiMaterial = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
     const confetti = new THREE.Mesh(confettiGeometry, confettiMaterial);
 
-    confetti.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5);
+    confetti.position.set(spawnPosition.x, spawnPosition.y, spawnPosition.z);
     confetti.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
 
     confetti.velocity = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, 0);
@@ -72,9 +110,9 @@ function createConfetti() {
     return confetti;
 }
 
-function initConfettis() {
+function initConfettis(spawnPosition) {
     for (let i = 0; i < 1000; i++) {
-        const confetti = createConfetti();
+        const confetti = createConfetti(spawnPosition);
         confettis.push(confetti);
         scene.add(confetti);
     }
@@ -102,7 +140,7 @@ class Logo {
                 scene.add(this.loadedLogo);
             },
             function (xhr) {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
             },
             function (error) {
                 console.log('An error happened :', error);
@@ -128,10 +166,10 @@ class Logo {
 let scale = { x: 0.006, y: 0.006, z: 0.006 };
 let rotation = { x: 0.004, y: 0.004, z: 0.001 };
 
-let upLeftLogo = new Logo(-6.5, 3, -100, 100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
-let upRightLogo = new Logo(6.5, 3, 100, 100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
-let downLeftLogo = new Logo(-6.5, -3, -100, -100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
-let downRightLogo = new Logo(6.5, -3, 100, -100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
+let upLeftLogo = new Logo(-5.3, 3, -100, 100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
+let upRightLogo = new Logo(5.3, 3, 100, 100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
+let downLeftLogo = new Logo(-5.3, -3, -100, -100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
+let downRightLogo = new Logo(5.3, -3, 100, -100, true, 1, scale, { x: rotation.x + Math.random() * 0.01, y: rotation.y + Math.random() * 0.01, z: rotation.z });
 
 upLeftLogo.loadModel();
 upRightLogo.loadModel();
@@ -156,7 +194,7 @@ function initLogoRain() {
             }
         },
         function (xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         },
         function (error) {
             console.log('An error happened :', error);
@@ -170,8 +208,6 @@ let zoomDirection = -1;
 let zoomSpeed = 0.25;
 const maxFov = 10000;
 const minFov = 40;
-
-console.log(camera.fov);
 
 function zoomAnimation() {
     if (isZooming) {
@@ -239,9 +275,7 @@ function onMouseClick(event) {
     
     const intersects = raycaster.intersectObjects([playButton]);
     if (scene.getObjectById(playButton.id) && intersects.length > 0 && !isRaining) {
-        // initConfettis();
         initLogoRain();
-        changeBackgroundColor(0xff0000);
     }
 }
 
@@ -273,6 +307,34 @@ kaputloader.load('public/fonts/Luckiest Guy_Regular.json', function (font) {
     scene.add(textMesh);
 });
 
+// --------------------  CRÉATION DE LA SCÈNE DE SCORE  -------------------
+
+function createSceneScore() {
+    const loader = new FontLoader();
+    loader.load('public/fonts/Luckiest Guy_Regular.json', function (font) {
+        const textGeometry = new TextGeometry('Score : ' + score, {
+            font: font,
+            size: 0.5,
+            height: 0.08,
+        });
+
+        textGeometry.computeBoundingBox();
+        textGeometry.center();
+
+        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x0786c1 });
+        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+        textMesh.position.x = camera.position.x;
+        textMesh.position.y = camera.position.y;
+        textMesh.position.z = camera.position.z - 5;
+
+        textMesh.lookAt(camera.position);
+
+        scene.add(textMesh);
+    }
+    );
+}
+
 // --------------------  CRÉATION SCÈNE DES QUESTIONS  --------------------
 
 let buttonRed = null;
@@ -283,6 +345,81 @@ let answerRed = null;
 let answerBlue = null;
 let answerGreen = null;
 let answerYellow = null;
+
+// check if a button of the question scene is clicked
+function checkAnswer(event) {
+    event.preventDefault();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersectsRedButton = raycaster.intersectObjects([buttonRed]);
+    const intersectsBlueButton = raycaster.intersectObjects([buttonBlue]);
+    const intersectsGreenButton = raycaster.intersectObjects([buttonGreen]);
+    const intersectsYellowButton = raycaster.intersectObjects([buttonYellow]);
+    
+    if (scene.getObjectById(buttonRed.id) && intersectsRedButton.length > 0) {
+        if (dataset[currentQuestion].answers[0] === dataset[currentQuestion].correctAnswer) {
+            goodAnswerSoundEffect.play();
+            initConfettis(buttonRed.position);
+            currentQuestion++;
+            score++;
+            setTimeout(() => deleteButtons(), 850);
+        } else {
+            wrongAnswerSoundEffect.play();
+            setTimeout(() => changeBackgroundColor(0xff0000), 300)
+            setTimeout(() => changeBackgroundColor(0xf8eee1), 850);
+            currentQuestion++;
+            setTimeout(() => deleteButtons(), 850);
+        }
+    }
+    if (scene.getObjectById(buttonBlue.id) && intersectsBlueButton.length > 0) {
+        if (dataset[currentQuestion].answers[1] === dataset[currentQuestion].correctAnswer) {
+            goodAnswerSoundEffect.play();
+            initConfettis(buttonBlue.position);
+            currentQuestion++;
+            score++;
+            setTimeout(() => deleteButtons(), 850);
+        } else {
+            wrongAnswerSoundEffect.play();
+            setTimeout(() => changeBackgroundColor(0xff0000), 300)
+            setTimeout(() => changeBackgroundColor(0xf8eee1), 850);
+            currentQuestion++;
+            setTimeout(() => deleteButtons(), 850);
+        }
+    }
+    if (scene.getObjectById(buttonGreen.id) && intersectsGreenButton.length > 0) {
+        if (dataset[currentQuestion].answers[2] === dataset[currentQuestion].correctAnswer) {
+            goodAnswerSoundEffect.play();
+            initConfettis(buttonGreen.position);
+            currentQuestion++;
+            score++;
+            setTimeout(() => deleteButtons(), 850);
+        } else {
+            wrongAnswerSoundEffect.play();
+            setTimeout(() => changeBackgroundColor(0xff0000), 300)
+            setTimeout(() => changeBackgroundColor(0xf8eee1), 850);
+            currentQuestion++;
+            setTimeout(() => deleteButtons(), 850);
+        }
+    }
+    if (scene.getObjectById(buttonYellow.id) && intersectsYellowButton.length > 0) {
+        if (dataset[currentQuestion].answers[3] === dataset[currentQuestion].correctAnswer) {
+            goodAnswerSoundEffect.play();
+            initConfettis(buttonYellow.position);
+            currentQuestion++;
+            score++;
+            setTimeout(() => deleteButtons(), 850);
+        } else {
+            wrongAnswerSoundEffect.play();
+            setTimeout(() => changeBackgroundColor(0xff0000), 300)
+            setTimeout(() => changeBackgroundColor(0xf8eee1), 850);
+            currentQuestion++;
+            setTimeout(() => deleteButtons(), 850);
+        }
+    }
+}
 
 function createButtons() {
     const buttonGeometry = new THREE.BoxGeometry(1, 0.5, 0.3);
@@ -317,24 +454,27 @@ function createButtons() {
     scene.add(buttonGreen);
     scene.add(buttonYellow);
 
+    console.log(currentQuestion);
+    console.log(dataset[parseInt(currentQuestion)]);
+
     const loader = new FontLoader();
     loader.load('public/fonts/Luckiest Guy_Regular.json', function (font) {
-        const textGeometryRed = new TextGeometry('Red', {
+        const textGeometryRed = new TextGeometry(dataset[currentQuestion].answers[0], {
             font: font,
             size: 0.2,
             height: 0.05,
         });
-        const textGeometryBlue = new TextGeometry('Blue', {
+        const textGeometryBlue = new TextGeometry(dataset[currentQuestion].answers[1], {
             font: font,
             size: 0.2,
             height: 0.05,
         });
-        const textGeometryGreen = new TextGeometry('Green', {
+        const textGeometryGreen = new TextGeometry(dataset[currentQuestion].answers[2], {
             font: font,
             size: 0.2,
             height: 0.05,
         });
-        const textGeometryYellow = new TextGeometry('Yellow', {
+        const textGeometryYellow = new TextGeometry(dataset[currentQuestion].answers[3], {
             font: font,
             size: 0.2,
             height: 0.05,
@@ -347,7 +487,7 @@ function createButtons() {
         const textMeshGreen = new THREE.Mesh(textGeometryGreen, textMaterial);
         const textMeshYellow = new THREE.Mesh(textGeometryYellow, textMaterial);
 
-        textMeshRed.position.x = buttonRed.position.x - 0.3;
+        textMeshRed.position.x = buttonRed.position.x - 0.2;
         textMeshRed.position.y = buttonRed.position.y - 0.1;
         textMeshRed.position.z = buttonRed.position.z + 0.1;
 
@@ -355,11 +495,11 @@ function createButtons() {
         textMeshBlue.position.y = buttonBlue.position.y - 0.1;
         textMeshBlue.position.z = buttonBlue.position.z + 0.1;
 
-        textMeshGreen.position.x = buttonGreen.position.x - 0.3;
+        textMeshGreen.position.x = buttonGreen.position.x - 0.4;
         textMeshGreen.position.y = buttonGreen.position.y - 0.1;
         textMeshGreen.position.z = buttonGreen.position.z + 0.1;
 
-        textMeshYellow.position.x = buttonYellow.position.x - 0.3;
+        textMeshYellow.position.x = buttonYellow.position.x - 0.5;
         textMeshYellow.position.y = buttonYellow.position.y - 0.1;
         textMeshYellow.position.z = buttonYellow.position.z + 0.1;
 
@@ -374,30 +514,23 @@ function createButtons() {
         scene.add(textMeshYellow);
     }
     );
+    window.addEventListener('click', checkAnswer, false);
 }
 
-// ---------------  GESTION DES ÉVÉNEMENTS SUR LES BOUTONS  ---------------
-function onMouseClickButton(event) {
-    event.preventDefault();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-
-    const intersects = raycaster.intersectObjects([buttonRed, buttonBlue, buttonGreen, buttonYellow]);
-    if (scene.getObjectById(buttonRed.id) && intersects.length > 0) {
-        if (intersects[0].object === buttonRed) {
-            scene.remove(buttonRed);
-            scene.remove(buttonBlue);
-            scene.remove(buttonGreen);
-            scene.remove(buttonYellow);
-            scene.remove(answerRed);
-            scene.remove(answerBlue);
-            scene.remove(answerGreen);
-            scene.remove(answerYellow);
-            scene.remove(questionText);
-            startZoomAnimation();
-        }
+function deleteButtons() {
+    scene.remove(questionText)
+    scene.remove(buttonRed);
+    scene.remove(buttonBlue);
+    scene.remove(buttonGreen);
+    scene.remove(buttonYellow);
+    scene.remove(answerRed);
+    scene.remove(answerBlue);
+    scene.remove(answerGreen);
+    scene.remove(answerYellow);
+    if (currentQuestion < Object.keys( dataset ).length) {
+        createSceneQuestions();
+    } else {
+        createSceneScore();
     }
 }
 
@@ -407,7 +540,7 @@ let questionText = null;
 function createSceneQuestions() {
     const loader = new FontLoader();
     loader.load('public/fonts/Luckiest Guy_Regular.json', function (font) {
-        const textGeometry = new TextGeometry('What is your favorite color ?', {
+        const textGeometry = new TextGeometry(dataset[currentQuestion].question, {
             font: font,
             size: 0.5,
             height: 0.08,
@@ -514,7 +647,6 @@ function animateConfettis() {
         if (confettis[i].position.y < -10 || confettis[i].position.y > 10 || confettis[i].position.x < -10 || confettis[i].position.x > 10 || confettis[i].position.z < -10 || confettis[i].position.z > 10) {
             scene.remove(confettis[i]);
             confettis.splice(i, 1);
-            console.log(confettis.length);
             if (confettis.length < 25) {
                 for (let j = 0; j < confettis.length; j++) {
                     scene.remove(confettis[j]);
@@ -548,6 +680,7 @@ function animate() {
     rotateLogo();
     animateConfettis();
     animateParticles();
+    
 
     renderer.render(scene, camera);
 }

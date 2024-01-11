@@ -1,0 +1,12 @@
+{
+    "0" : {
+        "question": "What is your favorite color ?",
+        "answers" : ["Red", "Blue", "Green", "Yellow"],
+        "correctAnswer" : "Blue"
+    },
+    "1" : {
+        "question": "Trouve le nom de famille de Max",
+        "answers" : ["Cekanowski", "Cekanoski", "Cekauwski", "Cekawausky"],
+        "correctAnswer" : "Cekanowski"
+    }
+}
