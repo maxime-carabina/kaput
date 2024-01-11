@@ -7,6 +7,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:import/recommended',
     'eslint-config-prettier',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -36,5 +37,6 @@ module.exports = {
         },
       },
     ],
+    'import/named': 0,
   },
 };
