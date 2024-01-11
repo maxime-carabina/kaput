@@ -1,0 +1,29 @@
+{
+    "album_question": {
+        "correct_answer": "19 \u2013 standard edition",
+        "options": [
+            "Album A",
+            "19 \u2013 standard edition",
+            "Album B",
+            "Album C"
+        ],
+        "question": "Which of these albums was released by adele?"
+    },
+    "award_question": {
+        "correct_answer": "2012",
+        "options": [
+            "2012",
+            "2016",
+            "2009",
+            "2013"
+        ],
+        "question": "When did adele receive the Grammy Award for Album of the Year?"
+    },
+    "song_question": {
+        "correct_answer": "Chasing Pavements",
+        "options": [
+            "Chasing Pavements"
+        ],
+        "question": "Which of these tracks is by adele?"
+    }
+}

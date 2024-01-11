@@ -5,6 +5,30 @@ from flask import Flask, request
 from SPARQLWrapper import SPARQLWrapper, JSON
 import random
 import requests
+import json
+
+def get_albums_by_artist(artist_name):
+    artist_id = get_wikidata_artist_id(artist_name)
+    if not artist_id:
+        return "Artist not found"
+
+    sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
+    query = f"""
+    SELECT ?album ?albumLabel ?releaseDate WHERE {{
+      ?album wdt:P31 wd:Q482994;  # Instance of album
+             wdt:P175 wd:{artist_id}; # Performed by the artist
+             wdt:P577 ?releaseDate.   # Release date of the album
+      SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
+    }}
+    ORDER BY ?releaseDate
+    """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+
+    albums = [{"album": result['albumLabel']['value'], "release_year": result['releaseDate']['value'][:4]} for result in results["results"]["bindings"]]
+    return albums if albums else f"No albums found for {artist_name}"
+
 
 
 def get_artist_awards(artist_name):
@@ -136,6 +160,26 @@ def generate_question(artist):
 
     return question, option_labels, correct_answer_label
 
+def generate_album_question(artist_name):
+    albums = get_albums_by_artist(artist_name)
+
+    if not albums:
+        return "No album found for this artist in the specified year", [], None
+
+    # Choose a random album from the list as the correct answer
+    correct_album = random.choice(albums)['album']
+
+    # Generate dummy album names for incorrect answers
+    incorrect_albums = ["Album A", "Album B", "Album C"]  # Replace with more realistic names
+
+    # Combine correct and incorrect answers
+    options = [correct_album] + incorrect_albums
+    random.shuffle(options)
+
+    question = f"Which of these albums was released by {artist_name}?"
+
+    return question, options, correct_album
+
 
 def generate_award_question(artist_name):
     artist_awards = get_artist_awards(artist_name)
@@ -167,9 +211,20 @@ def generate_award_question(artist_name):
 
 #########################ROUTES#################################
 
+@quiz_bp.route('/test', methods=['GET'])
+def test():
+    return "Test successful"
 
 
-@quiz_bp.route('/start/<artist_name>', methods=['GET'])
+@quiz_bp.route('/post-quiz', methods=['POST'])
+def submit_quiz():
+    data = request.json  
+    with open('quiz.json', 'w') as file:
+        json.dump(data, file, indent=4)
+
+    return jsonify({"message": "Quiz results saved successfully."})
+
+@quiz_bp.route('/start/<artist_name>', methods=['POST'])
 def start_quiz(artist_name):
     # Generate song question
     song_question_data = get_question(artist_name)
@@ -177,10 +232,14 @@ def start_quiz(artist_name):
     # Generate award question
     award_question_data = get_award_question(artist_name)
 
+    # Generate album question
+    album_question_data = get_album_question(artist_name)
+
     # Combine both questions in the response and return as JSON
     response = {
         "song_question": song_question_data,
-        "award_question": award_question_data
+        "award_question": award_question_data,
+        "album_question": album_question_data
     }
     
     return jsonify(response)
@@ -199,4 +258,12 @@ def get_award_question(artist_name):
         "question": question,
         "options": options,
         "correct_answer": correct_answer  
+    }
+
+def get_album_question(artist_name):
+    question, options, correct_answer = generate_album_question(artist_name)
+    return {
+        "question": question,
+        "options": options,
+        "correct_answer": correct_answer 
     }
