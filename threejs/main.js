@@ -683,7 +683,7 @@ function createSceneQuestions() {
 
         textMesh.position.x = camera.position.x;
         textMesh.position.y = camera.position.y + 2;
-        textMesh.position.z = camera.position.z - 5;
+        textMesh.position.z = camera.position.z - dataset[currentQuestion].question.length * 0.2;
 
         textMesh.lookAt(camera.position);
 

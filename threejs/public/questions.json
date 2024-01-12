@@ -1,12 +1,73 @@
 {
-    "0" : {
-        "question": "What is your favorite color ?",
-        "answers" : ["Red", "Blue", "Green", "Yellow"],
-        "correctAnswer" : "Blue"
+    "0": {
+        "correctAnswer": "2015",
+        "answers": [
+            "2019",
+            "2010",
+            "2020",
+            "2015"
+        ],
+        "question": "When did eminem receive his Grammy Award ?"
     },
-    "1" : {
-        "question": "Trouve le nom de famille de Max",
-        "answers" : ["Cekanowski", "Cekanoski", "Cekauwski", "Cekawausky"],
-        "correctAnswer" : "Cekanowski"
+    "1": {
+        "correctAnswer": "Mary J. Blige",
+        "answers": [
+            "Jul",
+            "Michael Jackson",
+            "Mary J. Blige",
+            "Billie Holiday"
+        ],
+        "question": "Which artist collaborated with eminem ?"
+    },
+    "2": {
+        "correctAnswer": "1996",
+        "answers": [
+            "1997",
+            "1995",
+            "1996",
+            "1998"
+        ],
+        "question": "In what year did eminem release their debut album ?"
+    },
+    "3": {
+        "correctAnswer": "hip hop",
+        "answers": [
+            "Reggae",
+            "Jazz",
+            "hip hop",
+            "Pop"
+        ],
+        "question": "Which genre is eminem primarily known for ?"
+    },
+    "4": {
+        "correctAnswer": "USA",
+        "answers": [
+            "Canadian",
+            "American",
+            "British",
+            "USA"
+        ],
+        "question": "From which country is eminem ?"
+    },
+    "5": {
+        "correctAnswer": "Chloraseptic",
+        "answers": [
+            "Lover Man", "Louise", "Chloraseptic", "Cool out"
+        ],
+        "question": "Which of these tracks is by eminem ?"
+    },
+    "6": {
+        "correctAnswer": "Business",
+        "answers": [
+            "Business", "All alone", "Coffe Cold", "Misty"
+        ],
+        "question": "Which of these tracks is by eminem ?"
+    },
+    "7": {
+        "correctAnswer": "Stan",
+        "answers": [
+            "Stan", "La kiffance","Quintessence", "Blue Train"
+        ],
+        "question": "Which of these tracks is by eminem ?"
     }
 }
