@@ -1,0 +1,65 @@
+{
+  "1": {
+    "question": "When did Adele receive the Grammy Award for Record of the Year?",
+    "answers": ["2009", "2007", "2015", "2012"],
+    "correctAnswer": "2012"
+  },
+  "0": {
+    "question": "Which of these tracks is by Adele?",
+    "answers": [
+      "Imagine",
+      "Like a Rolling Stone",
+      "Someone Like You",
+      "Bohemian Rhapsody"
+    ],
+    "correctAnswer": "Someone Like You"
+  },
+  "5": {
+    "question": "Which of these tracks is by Adele?",
+    "answers": [
+      "Bohemian Rhapsody",
+      "Like a Rolling Stone",
+      "Imagine",
+      "Hometown Glory / Fool That I Am (Live)"
+    ],
+    "correctAnswer": "Hometown Glory / Fool That I Am (Live)"
+  },
+  "7": {
+    "question": "Which artist collaborated with Adele?",
+    "answers": [
+      "Rhianna",
+      "Sopranno",
+      "Sofianne",
+      "Shakira",
+      "Jay Z",
+      "Sam Cooke",
+      "50 Cent"
+    ],
+    "correctAnswer": "Sam Cooke"
+  },
+  "4": {
+    "question": "Which genre is Adele primarily known for?",
+    "answers": ["jazz", "Rock", "Electronic", "Hip Hop"],
+    "correctAnswer": "jazz"
+  },
+  "6": {
+    "question": "From which country is Adele?",
+    "answers": ["American", "Canadian", "United Kingdom", "British"],
+    "correctAnswer": "United Kingdom"
+  },
+  "2": {
+    "question": "Which of these tracks is by Adele?",
+    "answers": [
+      "Bohemian Rhapsody",
+      "Like a Rolling Stone",
+      "Imagine",
+      "Set Fire to the Rain"
+    ],
+    "correctAnswer": "Set Fire to the Rain"
+  },
+  "3": {
+    "question": "In what year did Adele release their debut album?",
+    "answers": ["2007", "2010", "2008", "2009"],
+    "correctAnswer": "2008"
+  }
+}

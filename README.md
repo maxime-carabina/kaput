@@ -1,30 +1,69 @@
-# React + TypeScript + Vite
+# Kaput Documentation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Starting the development server for 2D app
 
-Currently, two official plugins are available:
+- Install dependencies:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-};
+```bash
+npm i
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Start the development server:
+
+```bash
+npm run dev
+```
+
+- Open your browser and navigate to `http://localhost:3000/` to see the app running.
+
+## Starting the development server for 3D app
+
+- Open a new terminal window and navigate to the `threejs` directory:
+
+```bash
+cd threejs
+```
+
+- Install dependencies:
+
+```bash
+npm i
+```
+
+- [ **Optional** ] Install threeJS on your machine:
+
+```bash
+npm install --save-dev vite
+```
+
+- Start the development server:
+
+```bash
+npx vite
+```
+
+## Launching the server
+
+- Open a new terminal window and navigate to the `quiz-env` directory:
+
+```bash
+cd quiz-env
+```
+
+- Launch the server:
+
+```bash
+python3 app.py
+```
+
+If you can see the following message in the terminal, the server is running successfully:
+
+```bash
+  * Running on http://127.0.0.1:8080
+```
+
+TIPs:
+
+- If you want to stop the server, press `CTRL + C` in the terminal window where the server is running.
+- If you want to restart the server, press `CTRL + C` in the terminal window where the server is running and then run the `python3 app.py` command again.
+- If you want to contribute or check an example of route in the server, check the `quiz-env/README.md` file.

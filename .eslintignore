@@ -6,3 +6,6 @@ env.d.ts
 presets/
 tailwind.config.js
 .eslintcache
+quiz-env/
+src/components/ui/
+threejs/

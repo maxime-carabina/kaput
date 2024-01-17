@@ -1,0 +1,57 @@
+{
+  "5": {
+    "question": "Which of these tracks is by Adele?",
+    "answers": [
+      "Rolling in the Deep",
+      "Imagine",
+      "Bohemian Rhapsody",
+      "Like a Rolling Stone"
+    ],
+    "correctAnswer": "Rolling in the Deep"
+  },
+  "0": {
+    "question": "Which of these tracks is by Adele?",
+    "answers": [
+      "Million Years Ago",
+      "Like a Rolling Stone",
+      "Bohemian Rhapsody",
+      "Imagine"
+    ],
+    "correctAnswer": "Million Years Ago"
+  },
+  "7": {
+    "question": "Which artist collaborated with Adele?",
+    "answers": ["50 Cent", "Rhianna", "Jay Z", "Keith Urban"],
+    "correctAnswer": "Keith Urban"
+  },
+  "4": {
+    "question": "Which genre is Adele primarily known for?",
+    "answers": ["jazz", "Blues", "Electronic", "Classical"],
+    "correctAnswer": "jazz"
+  },
+  "1": {
+    "question": "When did Adele receive the Grammy Award for Album of the Year?",
+    "answers": ["2014", "2009", "2012", "2011"],
+    "correctAnswer": "2012"
+  },
+  "2": {
+    "question": "Which of these tracks is by Adele?",
+    "answers": [
+      "Like a Rolling Stone",
+      "Hometown Glory / Fool That I Am (Live)",
+      "Imagine",
+      "Bohemian Rhapsody"
+    ],
+    "correctAnswer": "Hometown Glory / Fool That I Am (Live)"
+  },
+  "6": {
+    "question": "From which country is Adele?",
+    "answers": ["United Kingdom", "Canadian", "British", "American"],
+    "correctAnswer": "United Kingdom"
+  },
+  "3": {
+    "question": "In what year did Adele release their debut album?",
+    "answers": ["2008", "2007", "2010", "2009"],
+    "correctAnswer": "2008"
+  }
+}
