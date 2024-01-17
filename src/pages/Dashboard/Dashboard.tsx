@@ -3,32 +3,61 @@ import { useNavigate } from 'react-router-dom';
 
 import { LeaderBoardCard } from '@/components';
 import { Button } from '@/components/ui/button';
+// import { usePost } from '@/custom/api';
+// import { toast } from '@/components/ui/use-toast';
 
 const USERS = [
   {
     name: faker.internet.userName(),
-    score: faker.number.int({ max: 1000 }),
+    score: faker.number.int({ max: 8 }),
   },
   {
     name: faker.internet.userName(),
-    score: faker.number.int({ max: 1000 }),
+    score: faker.number.int({ max: 8 }),
   },
   {
     name: faker.internet.userName(),
-    score: faker.number.int({ max: 1000 }),
+    score: faker.number.int({ max: 8 }),
   },
   {
     name: faker.internet.userName(),
-    score: faker.number.int({ max: 1000 }),
+    score: faker.number.int({ max: 8 }),
   },
   {
     name: faker.internet.userName(),
-    score: faker.number.int({ max: 1000 }),
+    score: faker.number.int({ max: 8 }),
   },
 ];
 
 export function Dashboard() {
   const navigate = useNavigate();
+
+  // const {
+  //   mutate: postQuizzMutate,
+  //   data: postData,
+  //   isSuccess: postQuizzSuccess,
+  //   isError: postQuizzIsError,
+  //   error: postQuizzError,
+  // } = usePost(`post-quiz`);
+
+  // useEffect(() => {
+  //   if (postData) {
+  //     toast({
+  //       title: 'You get the following values:',
+  //       description: (
+  //         <pre className="mt-2 w-fit rounded-md bg-slate-950 p-4">
+  //           <code className="text-white w-full">
+  //             {JSON.stringify(postData, null, 2)}
+  //           </code>
+  //         </pre>
+  //       ),
+  //     });
+  //     // console.log(data);
+  //     // navigate(`/dashboard`);
+  //   } else if (postQuizzIsError) {
+  //     console.error(postQuizzError);
+  //   }
+  // }, [postQuizzSuccess, postQuizzError, postData]);
 
   return (
     <>

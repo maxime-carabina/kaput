@@ -7,7 +7,7 @@ import axios, { AxiosResponse } from 'axios';
 // LOCALS
 
 export function useResource<T>(resource: string): UseQueryResult<T, undefined> {
-  const url = `${import.meta.env.VITE_BASE_API}/${resource}`;
+  const url = `http://127.0.0.1:8080/${resource}`;
 
   return useQuery<T, undefined>({
     queryKey: ['', url],
